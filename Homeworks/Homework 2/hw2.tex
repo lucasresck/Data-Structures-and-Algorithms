@@ -1,0 +1,299 @@
+
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+
+% set the default code style
+\lstset{
+    language=C++,
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{mygreen}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red}, % string color
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\parindent0in
+\pagestyle{plain}
+\thispagestyle{plain}
+
+\newcommand{\assignment}{Homework 2}
+\newcommand{\duedate}{March 22, 2019}
+
+
+% \renewcommand\thesubsection{\arabic{subsection}}
+
+\title{Homework 2}
+\date{}
+
+\begin{document}
+
+Fundação Getulio Vargas\hfill\\
+Estruturas de Dados e Algoritmos\hfill\textbf{\assignment}\\
+Prof.\ Jorge Poco\hfill\textbf{Due:}: \duedate\\
+\smallskip\hrule\bigskip
+
+{\let\newpage\relax\maketitle}
+\maketitle
+
+
+\section{LinkedList Improvements }
+
+\begin{description}
+  \item[(1.0pt) Constructor:] You must improve the constructor. In this version, we must be able to create a list using one of the following two options:
+  
+\begin{lstlisting}
+int main() {
+    // Option 1: Variadic Templates
+    LinkedList list1(1, 2, 10, 2, 3);
+    list1.print();
+    // Option 2: Initialization List
+    LinkedList list2({1, 2, 10, 2, 3});
+    list1.print();
+}
+\end{lstlisting}
+
+ For the first option you might use the \emph{initializer\_list} from STL and for the second option the \emph{Variadic Templates} feature. An example for both cases can be found at \url{https://bit.ly/2EFy4fc}. Any of them is a valid answer but I recommend to try both options. 
+  
+  \item[(0.5pt) Destructor:] Your job here is to release the dynamic memory reserved by the new operator. In this method, you must call \lstinline|delete pNode| for each node in the list. To check that your code is working print something in the Node destructor to check that all the nodes are destructed.
+  
+  \item[(1.0pt) Templates:] Modify your class so it must support any data type. Remember we saw templates in classes. The following code should work if succeed this step.
+  
+\begin{lstlisting}
+int main() {
+    // create a linked list for three data types
+    LinkedList<int> ilist(1, 10, 2);
+    ilist.print();
+    // output: 1 10 2 
+    LinkedList<float> flist(1.2, 1.4, 100000);
+    flist.print();
+    // output: 1.2 1.4 100000 
+    LinkedList<std::string> slist("one", "two", "three");
+    slist.print();
+    // output: one two three 
+}
+\end{lstlisting}
+  
+  \item[(1.5pt) Iterators:] Here, you must implement all the necessary to make your LinkedList to work using iterators. It should be similar to the STL data structures in C++. The following code should work if you succeed.
+  
+\begin{lstlisting}
+int main() {
+    LinkedList<int> ilist(1, 2, 10, 2, 3);
+    LinkedList<int>::Iterator it;
+    for (it=ilist.begin(); it!=ilist.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    cout << endl;
+}
+\end{lstlisting}
+
+Just because this might be your first-time implementation and Iterator, you must include the following class inside your LinkedList class. Be careful, the code below is only a skeleton, you have to implement the methods. 
+
+\begin{lstlisting}
+class Iterator {
+public:
+    Node<T> *pNodo;
+public:
+    Iterator() { ... }
+    Iterator(Node<T> *p) { ... }
+
+    bool operator!=(Iterator it) { ... }
+    Iterator operator++() { ... }
+    T& operator*() { ... }
+};
+\end{lstlisting}
+
+In addition, you have to implement the following methods in the LinkedList class. 
+
+\begin{lstlisting}
+    Iterator begin()  { ... }
+    Iterator end() { ... }
+\end{lstlisting}
+  
+  \item[(1.0pt) Exceptions:] Our current implementation of the remove method does nothing if the element is not found in the list. However, the correct way to handle an exception is to throw an exception if something unusual happens. First, you must create an exception class (check this link to have an idea \url{https://bit.ly/2HXAwx3}). Then, modify your remove method to throws an exception if the element is not found. I will test using the following code: 
+
+\begin{lstlisting}
+int main() {
+    LinkedList<int> ilist(1, 2, 10, 2, 3);
+    // if we remove an item that doesn't exist it should throw an error
+    ilist.remove(20);
+    // output: libc++abi.dylib: terminating with uncaught
+    //         exception of type NotFoundException: Element not found
+
+}
+\end{lstlisting}
+
+Finally, you must use handle correctly the exception using try and catch structure.
+  
+\begin{lstlisting}
+int main() {
+    // Correct way to handle exceptions
+    try {
+        ilist.remove(20);
+    } catch (const NotFoundException& e) {
+        cerr << e.wh\begin{center}
+        
+        \end{center}
+        at();
+    }
+    // output: Element not found
+}
+\end{lstlisting}
+  
+\end{description}
+
+\section{Correctness of bubblesort}
+Bubblesort is a popular, but inefficient, sorting algorithm. It works by repeatedly swapping adjacent elements that are out of order.
+
+\begin{algorithm}[H]
+\SetAlgoLined
+  \For{$i = 1$ \textbf{to} $A.length -1$} {
+    \For{$j = A.length$ \textbf{downto} $i + 1$} {
+      \If{$A[j] < A[j-1]$} {
+        exchange $A[j]$ with $A[j-1]$
+      }
+    }
+  }
+\caption{BUBBLESORT(A)}
+\end{algorithm}
+
+\begin{enumerate}[label=\Alph*]
+  \item \textbf{(0.5pt)} Let $A'$ denote the output of BUBBLESORT(A). To prove that BUBBLESORT is correct, we need to prove that it terminates and that
+  
+  \begin{equation} \label{eq:1}
+    A'[1] \leq A'[2] \leq ... \leq A'[n]
+  \end{equation}
+  
+  where $n = A.length$. In order to show that BUBBLESORT actually sorts, what else do we need to prove?
+  \bigbreak
+  We need to prove the inner-loop invariant (that is, a property that doesn't change, relative to the sorting) and the outer-loop invariant. Finally we need prove, by induction, that the algorithm sorts, saying that it works in the beginning of the sorting, in the middle and in the end, so it will be sorted.
+  \bigbreak
+  The next two parts will prove inequality~(\ref{eq:1}).
+  
+  \item \textbf{(1.0pt)} State precisely a loop invariant \textbf{for} the for loop in lines 2–6, and prove that this loop invariant holds. Your proof should use the structure of the loop invariant proof presented in this chapter.
+  \bigbreak
+  \textbf{Inner loop invariant}: At the beginning of the iteration $j$, $A[j]$ is less than or equal to any other element in the sublist $A[j + 1:A.length]$.
+  
+  \textbf{Proof}: At the beginning of the iteration $j = A.length$, $A[j]$ is equal to any other element of the sublist $A[j + 1:A.length]$ by emptiness. 
+  
+  Now we will prove the affirmative by induction:
+  
+  Let's suppose, by induction, that the invariant holds at the beginning of the iteration $j = k$. We have to prove that it holds too at the beginning of the iteration $j = k - 1$.
+  
+  By assumption, at the beginning of the iteration $j = k$, $A[j]$ is less than or equal to any other element in the sublist $A[j + 1:A.length]$. Two cases:
+  \subitem if statement is \textbf{true}: $A[j] < A[j - 1]$ and they will exchange. So, in the beginning of the next iteration ($j = k - 1$), $A[j]$ will be less than or equal to $A[j + 1]$ and any other element in the sublist $A[j + 2:A.length]$, that is, less than or equal to any other element in the sublist $A[j + 1:A.length]$.
+  \subitem if statement is \textbf{false}: $A[j - 1] \le A[j]$ and they will not exchange. So, in the beginning of the next iteration ($j = k - 1$), $A[j] \le A[j + 1]$ and, as we know, $A[j + 1]$ is less than or equal to any other element in the sublist $A[j + 2:A.length]$, therefore $A[j]$ is less than or equal too any other element in the sublist $A[j + 1:A.length]$.
+  
+  At the termination of the loop, end of the $j = i + 1$ iteration (like the beginning of some $j = i$ iteration), $A[j - 1]$ will be less than or equal to any other element in the sublist $A[j:A.length]$.
+  \bigbreak
+  \item \textbf{(1.0pt)} Using the termination condition of the loop invariant proved in part (B), state a loop invariant for the for loop in lines 1–7 that will allow you to prove inequality~(\ref{eq:1}). Your proof should use the structure of the loop invariant proof presented in this chapter.
+  \bigbreak
+  \textbf{Outer loop invariant}: In the beginning of the iteration \textbf{i}, the sublist $A[1:i - 1]$ are sorted and all of its elements are less than or equal to any other element of the sublist $A[i:A.length]$.
+  
+  \textbf{Proof}: For $i = 1$, the sublist $A[1:0]$ is trivially sorted by emptiness.
+  
+  Let's suppose, by induction, that in the beginning of the iteration $i = k$ the sublist $A[1:i - 1]$ is sorted and all of its elements are less than or equal to any other element of the sublist $A[i:A.length]$. We need to prove that in the beginning of the iteration $i = k + 1$ the sublist $A[1:i - 1]$ is sorted and all of its elements are less than or equal to any other element of the sublist $A[i:A.length]$.
+  
+  By assumption, $A[1:i - 1]$ is sorted and all of its elements are less than or equal to any other element of the sublist $A[i:A.length]$ at the beginning of the iteration $i = k$. During $i = k$ iteration, inner loop invariant hold, so, at the end of inner loop, $A[i]$ is less than or equal to any other element in the sublist $A[i + 1:A.length]$. Because any other element of the sublist $A[1:i - 1]$ particularly is less than or equal to $A[i]$ and $A[i]$ is less than or equal to any other element in the sublist $A[i + 1:A.length]$, the sublist $A[1:i]$ is sorted and all of its elements are less than or equal to any other element in the sublist $A[i + 1:A.length]$. So, at the beginning of the iteration $i = k + 1$, the sublist $A[1:i - 1]$ is sorted and all of its elements are less than or equal to any other element in the sublist $A[i:A.length]$.
+  
+  At the termination of the loop, end of $i = A.length$ iteration (like a beginning of some $i = A.length + 1$ iteration, the sublist $A[1:i - 1] = A[1:A.length]$ is sorted and all of its elements is less than or equal to any other element in the sublist $A[i:A.length]$ (by emptiness). So $A$ is sorted.
+  \bigbreak
+  \item \textbf{(0.5pt)} What is the worst-case running time of BUBBLESORT? How does it compare to the running time of insertion sort?
+  \bigbreak
+  The worst-case running time of BUBBLESORT is when the list $A$ is reversed sort, so it will exchange numbers in all inner loops, with runtime $O(n^2)$.
+  
+  Insertion sort has $O(n^2)$ worst-case running time too. Similarly to the bubble sort, when the list is reversed sorted, in every inner iteration insertion sort will change place of numbers.
+\end{enumerate}
+
+
+\section{Growth of Functions}
+
+\begin{enumerate}[label=\Alph*]
+  \item For each of the following pairs of functions, either $f(n)$ is in $O(g(n))$, $f(n)$ is in $\Omega(g(n))$, or $f(n) = \Theta(g(n))$. Determine which relationship is correct and briefly explain why.
+    \begin{itemize}
+      \item \textbf{(0.5pt)} $f(n) = \log n^2$; $g(n) = \log n + 5$
+      
+      \begin{equation*}
+      \begin{aligned}
+        f(n) &= \log n^2 \\
+        &= 2\log n \\
+        &= \Theta(\log n) \\
+        &= \Theta(\log n + 5) \\
+        &= \Theta(g(n)) \\
+      \end{aligned}
+    \end{equation*}
+    
+      \item \textbf{(0.5pt)} $f(n) = \log^2 n$; $g(n) = \log n$
+      \bigbreak
+      We have $\log^2 n = \Omega(\log n)$ (just take $c = 1$ and $n_0 = 2$), but we don't have $\log^2 n = O(\log n)$ (there isn't $c \in \mathbb{R}$ that makes $\log n \le c$ for all $n \ge n_0$).
+      
+      \begin{equation*}
+      \begin{aligned}
+        f(n) &= \log^2 n \\
+        &= \Omega(\log n) \\
+        &= \Omega(g(n))
+      \end{aligned}
+    \end{equation*}
+    
+      \item \textbf{(0.5pt)} $f(n) = n\log n + n$; $g(n) = \log n$
+      \bigbreak
+      We have $n\log n + n \ge n\log n \ge c\log n$ for $n \ge n_0$ taking $c = 1$ and $n_0 = 2$, but there isn't $c \in \mathbb{R}$ that makes $n\log n + n \le c\log n \iff (n - c)\log n + n \le 0$ ($n > c$ with $n > 1$ makes it false). So, $f(n) = \Omega(\log n)$.
+    \bigbreak
+      \item \textbf{(0.5pt)} $f(n) = 2^n$; $g(n) = 10n^2$
+      \bigbreak
+      By exercise C, we know that, calling $e = 10\cdot d$, $\forall e \in \mathbb{R}_+, \exists n_0 \in \mathbb{N}; n\ge n_0 \Rightarrow 2^n \ge e \cdot n^2$. So, there is no $e \in \mathbb{R}_+$ such that $2^n \le e\cdot n^2$. So, $f(n) = \Omega(g(n))$.
+    \end{itemize}
+    \bigbreak
+  \item \textbf{(0.5pt)} Prove that $n^3 -3n^2 -n+1 = \Theta(n^3)$.
+  \bigbreak
+  We have to prove that $n^3 -3n^2 -n+1 = \Omega(n^3) = O(n^3)$.
+  
+  For $\Omega$: Take $c_1 = 1/2$ and $n_0 = 6$. So
+  $$c_1 \cdot n^3 \le n^3 -3n^2 - n + 1 \Rightarrow 0 \le \dfrac{1}{2}n^3 - 3n^2 - n + 1$$
+  This is true for $n\ge n_0=7$, because, for $h(n) = \dfrac{1}{2}n^3 - 3n^2 - n + 1$, $h(7) \ge 0$ and $h'(n) = \dfrac{3}{2}n^2-6n-1 \ge 0$ for $n\ge 7$.
+  
+  For $O$: Take $c_2 = 1$ and $n_0 = 1$. So
+  $$n^3 - 3n^2-n+1\le n^3 \Rightarrow -3n^2-n+1\le0$$
+  and this is true for $n\ge n_o=1$.
+  
+  It's proved.
+  \bigbreak
+  \item \textbf{(0.5pt)} Prove that $n^2 = O(2^n)$.
+  \bigbreak
+  We have to prove that
+  $\exists c \in \mathbb{R}_+$, $\exists n_0 \in \mathbb{N}; n\ge n_0 \Rightarrow n^2 \le c\cdot2^n$. Calling $c = \dfrac{1}{d}$, we have $2^n\ge d\cdot n^2$.
+    More: I affirm that $\forall d \in \mathbb{R}_+ \exists n_0 \in \mathbb{N}$.
+    
+    We have the following limit:
+    
+    $$\lim_{n\to+\infty} \dfrac{2^n}{n^2} = +\infty$$
+    
+    By definition of infinity limit:
+    
+    $$\forall d \in \mathbb{R}_+ \exists n_0 \in \mathbb{N}; n \ge n_0 \Rightarrow \dfrac{2^n}{n^2} \ge d \Rightarrow 2^n \ge d\cdot n^2$$
+    
+    It's proved that $n^2 = O(2^n)$.
+  
+\end{enumerate}
+
+
+
+
+
+
+\end{document}

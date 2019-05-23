@@ -1,0 +1,280 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{enumitem}
+\usepackage{amsmath}
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+
+% set the default code style
+\lstset{
+    language=C++,
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{mygreen}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red}, % string color
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\parindent0in
+\pagestyle{plain}
+\thispagestyle{plain}
+
+\newcommand{\assignment}{Homework 3}
+\newcommand{\duedate}{April 7, 2019}
+
+
+% \renewcommand\thesubsection{\arabic{subsection}}
+
+\title{Homework 3}
+\date{}
+
+\begin{document}
+
+Fundação Getulio Vargas\hfill\\
+Estruturas de Dados e Algoritmos\hfill\textbf{\assignment}\\
+Prof.\ Jorge Poco\hfill\textbf{Due:}: \duedate\\
+\smallskip\hrule\bigskip
+
+{\let\newpage\relax\maketitle}
+\maketitle
+
+
+\section{Red-Black Trees}
+
+I am attaching a binary tree source code (\texttt{bst-0.0.cpp}) with the methods insert, delete and print. Your job would be to implement a Red-Black Tree. This class must include then functions insert, remove and print as well. 
+
+To test your code you can follow the examples described in the document \texttt{anexo1.pdf}. In addition, you might be interested in the document \texttt{anexo2.pdf} for a more detailed description of this tree, there is also some Java code that might be useful. 
+
+However, your code must be in C++ and modifying the class I sent you. The grading would be as follow:
+
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{(2.5pts)} insert
+  \bigbreak
+  Insert was implemented in the attached C++ code.
+  \bigbreak
+  \item \textbf{(2.5pts)} remove 
+  \bigbreak
+  Remove was implemented in the attached C++ code.
+  \bigbreak
+\end{enumerate}
+
+An example of the main function is: 
+
+\begin{lstlisting}
+int main() {
+  // this constructor must call the function insert multiple times 
+  // respecting the order
+  RBTree tree(41, 38, 31, 12, 19, 8);
+  tree.print();
+
+  // testing the remove function
+  tree.remove(8);
+  tree.print();
+}
+\end{lstlisting}
+
+
+
+
+\section{Radix Sort}
+
+\textbf{(2pts) }Your job is to implement the radix sort algorithm described in class. You must use python for this task. The following code is going to be used to test your implementation. You have to submit a notebook with your code.
+\bigbreak
+A notebook is submitted with the code.
+\bigbreak
+  
+\begin{lstlisting}[language=Python]
+def radix_sort(A, d, k):
+  # A consists of n d-digit ints, with digits ranging 0 -> k-1
+  #
+  # implement your code here
+  # return A_sorted
+
+
+# Testing your function
+A = [201, 10, 3, 100]
+A_sorted = radix_sort(A, 3, 10)
+print(A_sorted)
+# output: [3, 10, 100, 201]
+\end{lstlisting}
+
+\section{Sorting in Place in Linear Time}
+\textbf{(2pts)} Suppose that we have an array of $n$ data records to sort and that the key of each record has the value 0 or 1. An algorithm for sorting such a set of records might possess some subset of the following three desirable characteristics:
+
+\begin{enumerate}
+  \item The algorithm runs in $O(n)$ time.
+  \item The algorithm is stable.
+  \item The algorithm sorts in place, using no more than a constant amount of storage space in addition to the original array.
+\end{enumerate}
+
+\begin{enumerate}[label=(\alph*)]
+  \item Give an algorithm that satisfies criteria 1 and 2 above.
+  \bigbreak
+  As we know, counting sort is $O(n)$. We can make a stable counting sort based on the algorithm studied in class. After the counts, we will accumulate the counters over count list.
+  \begin{lstlisting}[language=Python]
+  count[a] += count[a - 1]
+  \end{lstlisting}
+  So, we will look at the elements \textbf{a} of \textbf{A} (starting from the last element), which will give us the index of count list to look at (we will look to \textbf{count[a]}). This element will tell us where we put \textbf{a} in \textbf{result} and we'll decrease \textbf{count[a]}:
+  \begin{lstlisting}[language=Python]
+  result[count[a] - 1] = a
+  count[a] -= 1
+  \end{lstlisting}
+  The code for stable counting sort is attached in the notebook.
+  \bigbreak
+  \item Give an algorithm that satisfies criteria 1 and 3 above.
+  \bigbreak
+  It was asked to implement a counting sort in place with $O(n+k)$ in exercise (e). So the answer is that algorithm.
+  \bigbreak
+  \item Give an algorithm that satisfies criteria 2 and 3 above.
+  \bigbreak
+  Insertion sort is stable and in place.
+  \bigbreak
+  \item Can any of your sorting algorithms from parts(a)–(c) be used to sort $n$ records with $b$-bit keys using radix sort in $O(bn)$ time? Explain how or why not.
+  \bigbreak
+  Radix sort needs an stable sort algorithm to sort the list. Besides that, for radix sort to have $O(bn)$, it needs an algorithm with $O(n)$. We can use an algorithm to do this: the stable counting sort, from exercise (a).
+  \item Suppose that the $n$ records have keys in the range from 1 to $k$. Show how to modify counting sort so that the records can be sorted in place in $O(n + k)$ time. You may use $O(k)$ storage outside the input array. Is your algorithm stable? (Hint: How would you do it for $k = 3$?)
+  \bigbreak
+  The code for this in place counting sort is in the attached notebook.
+  
+  We have to change counting sort to make it an in place sorting algorithms. So counting sort will change the original list of records in order to sort it. I will take the idea of cumulative counter I told in exercise (a).
+  
+  Let's consider to start looking at the last element and verify if it's in the right place. If we are looking at element \textbf{A[i]} from list \textbf{A}, so \textbf{counts[A[i]]} will be its counter. Therefore, because its a cumulative counter, \textbf{counts[A[i]] - 1} will indicate the right place of element \textbf{A[i]}. Is it in the right place?
+  
+  If it's, we decrement its counter; if it's not, we move it to the right place (according to the counts list) switching with the element there. So we ask it again: this new element is in the right place? And so on.
+  
+  The problem is when these two elements are equal (by equal I say to have the same key). To fix that, if the elements are equal, we exchange them, but in the second exchange, we move it to immediately left of the right place. And make it again if there's three elements. And so on.
+  
+  We know that these elements will be in right places, because counter show us the last right place (which one with the biggest index) and, because there is repeated elements, there will be right places left the shown one.
+  
+  It's $O(n+k)$, because there's at most $n$ exchanges (which exchange put an element in right place) and there's $O(k)$ to make counter.
+  
+  It's not an in place algorithm. There's a counter-example:
+ 
+  \begin{lstlisting}[language=Python] 
+    A = [(0, 1), (20, 1), (33, 1), (21, 1), (1, 2), (22, 3), (22, 4), (1, 5), (34, 1)]
+    B = in_place_counting_sort(A, 35)
+    print(B)
+  \end{lstlisting} 
+  \begin{lstlisting}[language=Python]
+    [(0, 1), (1, 5), (1, 2), (20, 1), (21, 1), (22, 3), (22, 4), (33, 1), (34, 1)]
+  \end{lstlisting}
+
+\end{enumerate}
+
+\section{Alternative Quicksort Analysis} 
+\textbf{(2pts)} An alternative analysis of the running time of randomized quicksort focuses on the expected running time of each individual recursive call to QUICKSORT, rather than on the number of comparisons performed.
+
+\begin{enumerate}[label=(\alph*)]
+  \item Argue that, given an array of size $n$, the probability that any particular element is chosen as the pivot is $1/n$. Use this to define indicator random variables $X_i = I \{i\mbox{th smallest element is chosen as the pivot}\}$. What is $E[X_i]$?
+  \bigbreak
+  There's no reason to a particular element of the array to have a probability greater than another element. So, every element has the same probability. Because the sum of all probabilities has to be 1, the probability of choosing a particular element is $1/n$.
+  
+  Let's consider $X_i = I \{i\mbox{th smallest element is chosen as the pivot}\}$. By definition:
+  
+  $E[X_i] = 0 \cdot P(X_i = 0) + 1 \cdot P(X_i = 1) = P(X_i = 1) = 1/n$
+  \item Let $T(n)$ be a random variable denoting the running time of quicksort on an array of size $n$. Argue that
+  \begin{equation}
+    E[T(n)]=E\left[\sum_{q=1}^{n}X_q(T(q-1)+T(n-q)+\Theta(n))\right]  
+    \label{eq:1}
+  \end{equation}
+  \bigbreak
+  The running time of quicksort is equal to the running time of each left (with $q - 1$ elements) and right (with $n - q$ elements) partitions plus linear time (to partition it). Given that it was choosen $q$ smaller elementh, we have:
+  
+  $$T(n) = T(q - 1) + T(n - q) + \Theta(n)$$
+  
+  Which is the same to write
+  
+   $$T(n) = X_q(T(q - 1) + T(n - q) + \Theta(n))$$
+   
+   and
+   
+   $$T(n) = \sum_{q=1}^n X_q(T(q - 1) + T(n - q) + \Theta(n))$$
+   
+   because $X_p = 0$ if $p\neq q$. So
+   
+   $$E(T(n)) = E\left(\sum_{q=1}^n X_q(T(q - 1) + T(n - q) + \Theta(n))\right)$$
+  
+  \item Show that equation~\ref{eq:1} simplifies to
+  \begin{equation}
+    E[T(n)] = \frac{2}{n}\sum_{q=0}^{n-1}E[T(q)] + \Theta(n)
+    \label{eq:2}
+  \end{equation}
+  \bigbreak
+  \begin{equation*}
+  \begin{aligned}
+E(T(n)) &= E\left(\sum_{q=1}^n X_q(T(q - 1) + T(n - q) + \Theta(n))\right)\\
+ &= E\left(\sum_{q=1}^n (X_qT(q - 1) + X_qT(n - q) + X_q\Theta(n))\right)\\
+&= E\left(\sum_{q=1}^n X_qT(q - 1) + \sum_{q=1}^nX_qT(n - q) + \sum_{q=1}^nX_q\Theta(n))\right)\\
+&= \sum_{q=1}^n E(X_q T(q-1)) + \sum_{q=1}^n E(X_q T(n - q)) + \sum_{q=1}^n E(X_q \Theta(n))\\
+&= \sum_{p = 0}^{n-1} E(X_{p+1} T(p)) + \sum_{p=n-1}^0 E(X_{n-p} T(p)) + \sum_{q=1}^n \Theta(n)E(X_q )\\
+&= \sum_{p = 0}^{n-1} E(X_{p+1} T(p)) + \sum_{p=n-1}^0 E(X_{n-p} T(p)) + \Theta(n)
+\end{aligned}
+  \end{equation*}
+  
+  Given that $X_{p+1}$ is either $1$ or $0$ ($p+1$-th smallest elementh was choosen or not), it givens no information about $T(p)$ (the running time of an array with $p$ elements), that is, $T(p)$ is independent of $X_{p+1}$. So
+  
+  
+  \begin{equation*}
+  \begin{aligned}
+E(T(n)) &= \sum_{p = 0}^{n-1} E(X_{p+1})E( T(p)) + \sum_{p=n-1}^0 E(X_{n-p})E( T(p)) + \Theta(n) \\
+&= \dfrac{1}{n}\sum_{p = 0}^{n-1} E( T(p)) + \dfrac{1}{n}\sum_{p=n-1}^0 E( T(p)) + \Theta(n) \\
+&= \dfrac{1}{n}\sum_{q = 0}^{n-1} E( T(q)) + \dfrac{1}{n}\sum_{q=0}^{n-1} E( T(q)) + \Theta(n) \\
+&= \dfrac{2}{n}\sum_{q = 0}^{n-1} E( T(q))  + \Theta(n) \\
+\end{aligned}
+  \end{equation*}
+
+  \item Show that
+  \begin{equation}
+    \sum_{k=1}^{n-1} k \lg k \leq \frac{1}{2}n^2\lg n - \frac{1}{8}n^2
+    \label{eq:3}
+  \end{equation}
+  (Hint: Split the summation into two parts, one for $k=1,2, \ldots, \lceil n/2 \rceil - 1$ and \\ one for $k=\lceil n/2 \rceil~,\ldots,~n-1.)$
+  \bigbreak
+  $$\sum_{k=1}^{n-1} k \lg k = \sum_{k=2}^{n-1} k \lg k$$
+  Note that this is approximately the integral of $k \lg k$ from $2$ to $n$ (it's an Riemann sum with $\Delta k$ equal to $1$ and $k^*$ being the left end $k$ of the interval). Because $k\lg k$ is increasing, it's less than the integral. So:
+  \begin{equation*}
+  \begin{aligned}
+    \sum_{k=2}^{n-1} k \lg k &\leq \int_2^n k\lg k dk\\
+    &=\left\dfrac{k^2}{2}\lg k - \dfrac{k^2}{4\ln 2}\right]_2^n\\
+    &= \dfrac{n^2}{2}\lg n-\dfrac{n^2}{4\ln 2}-2+\dfrac{1}{\ln 2}\\
+    &\leq\dfrac{1}{2}n^2\lg n - \dfrac{1}{8}n^2
+    \end{aligned}
+  \end{equation*}
+  
+
+  \item Using the bound from equation~\ref{eq:3}, show that the recurrence in equation~\ref{eq:2} has the solution $E[T(n)]=\Theta(n\lg n)$. (Hint: Show, by substitution, that $E[T(n)] \leq an \log n - bn$ for some positive constants $a$ and $b$.)
+  \bigbreak
+  It's trivial that $E(T(2)) \leq 2a\log 2 - 2b$ for some $a, b$.
+  
+  Suppose, by induction, that $E(T(n)) \leq an \log n - bn$ for some positive constants $a$ and $b$. So: \begin{equation*}
+      \begin{aligned}
+      E[T(n)] &= \frac{2}{n}\sum_{q=0}^{n-1}E[T(q)] + \Theta(n)\\
+    &= \frac{2}{n}\sum_{q=1}^{n-1}E[T(q)] + \Theta(n)\\
+      &\leq \frac{2}{n}\sum_{q=1}^{n-1} (aq \log q - bq) + \Theta(n)\\
+      &= \frac{2}{n}\sum_{q=1}^{n-1} aq \log q - \dfrac{2}{n}\sum_{q=1}^{n-1} bq + \Theta(n)\\
+      &= \frac{2a}{n}\sum_{q=1}^{n-1} q \log q - \dfrac{2}{n}\sum_{q=1}^{n-1} bq + \Theta(n)\\
+      &\leq \frac{2a}{n}\sum_{q=1}^{n-1} q \log q  + \Theta(n)\\
+      &\leq\dfrac{2a}{n}\left(\frac{1}{2}n^2\lg n - \frac{1}{8}n^2\right) + \Theta(n)\\
+      &= an\lg n - \frac{an}{4} + \Theta(n)\\
+      &\leq an\lg n - bn
+  \end{aligned}
+  \end{equation*}
+   
+   So $E(T(n)) = \Theta(n\lg n)$.
+  
+\end{enumerate}
+
+
+
+\end{document}
